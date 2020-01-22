@@ -1,0 +1,99 @@
+﻿{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+Your shopping cart
+{% endblock %}
+{% block content %}
+
+<div id="templatemo_main">
+   		<div id="sidebar" class="float_l">
+        	<div class="sidebar_box"><span class="bottom"></span>
+            	<h3>Categories</h3>   
+                <div class="content"> 
+	<li {% if not category %}class="selected"{% endif %}><a href="{% url "shop:product_list" %}">All</a>
+                	<ul class="sidebar_list">
+		{% for c in categories %}
+                        <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                         <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                          </li>
+	{% endfor %}
+                    </ul>
+</li>
+                </div>
+            </div>
+
+<div class="sidebar_box"><span class="bottom"></span>
+            	<h3>Best Sellers </h3> 
+{% for product in products %}{% if product.not_available %} 
+                <div class="content"> 
+                	<div class="bs_box">
+                    	<a href="{{ product.get_absolute_url }}">
+<img src="{{ product.image.url }}" width=200 height=200/>
+                        <h4><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+                        <p class="price">Rs.{{ product.price }}</p>
+                        <div class="cleaner"></div>
+                    </div>
+{% endif %}
+{% endfor %}    
+            </div>
+        </div>
+
+            <div id="content" class="float_r">
+        	<h1>Shopping Cart</h1>
+        	<table width="680px" cellspacing="0" cellpadding="5">
+                   	  	<tr bgcolor="#ddd">
+                        	<th width="220" align="left">Image </th> 
+                        	<th width="180" align="left">Description </th> 
+                       	  	<th width="100" align="center">Quantity </th> 
+                        	<th width="60" align="right">Price </th> 
+                        	<th width="60" align="right">Total </th> 
+                        	<th width="90"> </th>
+                      	</tr>
+
+		{% for item in cart %}
+			{% with product=item.product %}
+                    	<tr>
+		
+                        	<td><a href="{{ product.get_absolute_url }}">
+<img src="{% if product.image %}{{ product.image.url }}
+{% else %}{% static "img/no_image.png" %}{% endif %}"  width=200 height=200/>
+</a></td> 
+                        	<td>{{ product.name }}</td> 
+                            <td align="center">
+		<form action="{% url "cart:cart_add" product.id %}" method="post">
+	             	{{ item.update_quantity_form.quantity }}
+		{{ item.update_quantity_form.update }}
+		<input type="submit" value="Update">
+		{% csrf_token %}
+		</form>
+
+	         </td>
+                            <td align="right"> Rs. {{ item.price }}</td> 
+                            <td align="right">Rs. {{ item.total_price }} </td>
+                            <td align="center"> <a href="{% url "cart:cart_remove" product.id
+%}">Remove</a> </td>
+						</tr>
+		{% endwith %}
+		{% endfor %}
+                        
+                        <tr>
+                        	<td colspan="3" align="right"  height="30px">Have you modified your basket? Please click here to <a href="shoppingcart.html"><strong>Update</strong></a>&nbsp;&nbsp; <br /> Validate <a href="http://validator.w3.org/check?uri=referer" rel="nofollow"><strong>XHTML</strong></a> &amp; <a href="http://jigsaw.w3.org/css-validator/check/referer" rel="nofollow"><strong>CSS</strong></a>&nbsp;&nbsp; </td>
+                            <td align="right" style="background:#ddd; font-weight:bold"> Total </td>
+                            <td align="right" style="background:#ddd; font-weight:bold">Rs. {{ cart.get_total_price }}</td>
+                            <td style="background:#ddd; font-weight:bold"> </td>
+						</tr>
+					</table>
+                    <div style="float:right; width: 215px; margin-top: 20px;">
+                    
+					<p><a href="{% url "orders:order_create" %}" class="button">
+Checkout</a></p>
+                    <p><a href="{% url "shop:product_list" %}" class="button
+light">Continue shopping</a></p>
+                    	
+                    </div>
+            
+        </div> 
+        <div class="cleaner"></div>
+    </div> <!-- END of templatemo_main -->
+    
+  {% endblock %}

@@ -1,0 +1,38 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+
+{% endblock %}
+{% block content %}
+
+{% for product in products %}
+<div class="sidebar_box"><span class="bottom"></span>
+            	<h3>Best Sellers </h3>   
+                <div class="content"> 
+                	<div class="bs_box">
+                    	<a href="{{ product.get_absolute_url }}">
+<img src="{% if product.image %}{{ product.image.url }}{%
+else %}{% static "img/no_image.png" %}{% endif %}">
+                        <h4><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+                        <p class="price">Rs.{{ product.price }}</p>
+                        <div class="cleaner"></div>
+                    </div>
+
+            </div>
+        </div>
+        <div id="content" class="float_r">
+        	<h1>New Products</h1>
+            <div class="product_box">
+            	<a href="{{ product.get_absolute_url }}">
+<img src="{% if product.image %}{{ product.image.url }}{%
+else %}{% static "img/no_image.png" %}{% endif %}">
+                <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                <p class="product_price">Rs.{{ product.price }} </p>
+                <a href="shoppingcart.html" class="add_to_card">Add to Cart</a>
+                <a href="productdetail.html" class="detail">Detail</a>
+            </div>   
+{% endfor %}     	
+ </div> 
+        <div class="cleaner"></div>
+    </div> <!-- END of templatemo_main -->
+{% endblock %}
